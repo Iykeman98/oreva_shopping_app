@@ -1,11 +1,21 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
+import 'package:orevahardware/models/cart_items.dart';
 import 'package:orevahardware/screens/dash_board.dart';
+import 'package:provider/provider.dart';
 
 import 'constants/kcolors.dart';
 
 void main() {
-  runApp( MyApp());
+  runApp(
+    ChangeNotifierProvider(
+    create: (context) {
+      return CartProvider();
+    },
+      child: MyApp()
+  ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -30,7 +40,7 @@ class MyApp extends StatelessWidget {
       home:  ZoomDrawer(
         controller: zoomController,
         style: DrawerStyle.defaultStyle, // Choose your desired style
-        menuScreen: MyDrawer(launchInstagram: () {  },), // Your drawer content
+        menuScreen: MyDrawer(launchInstagram: () {  }, zoomController: zoomController,), // Your drawer content
         mainScreen: DashBoard(zoomController: zoomController, instagramUrl: 'https://www.instagram.com/orevahardware/related_profiles/',), // Make sure this line is correct
       ),
     );

@@ -3,12 +3,14 @@ import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:orevahardware/constants/kcolors.dart';
 import 'package:orevahardware/models/card_data.dart';
+import 'package:provider/provider.dart';
 
+import '../models/cart_items.dart';
 import '../screens/ProductDetailScreen.dart';
 
 class CustomProductDisplayCard extends StatefulWidget {
   const CustomProductDisplayCard({Key? key, required this.card,  required this.zoomController}) : super(key: key);
-  final CardModel card;
+  final CartItem card;
   final ZoomDrawerController zoomController;
 
   @override
@@ -18,6 +20,7 @@ class CustomProductDisplayCard extends StatefulWidget {
 class _CustomProductDisplayCardState extends State<CustomProductDisplayCard> {
   @override
   Widget build(BuildContext context) {
+
     return  GestureDetector(
       onTap: () {
         // Navigate to the ProductDetail screen and pass the selected product details
@@ -37,11 +40,11 @@ class _CustomProductDisplayCardState extends State<CustomProductDisplayCard> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-          Image(image: AssetImage(widget.card.image)),
+          Image(image: AssetImage(widget.card.image!)),
           SizedBox(height: 20,),
-          Text(widget.card.description, style: AppTextStyles.descriptionTextStyle,maxLines: 2,),
+          Text(widget.card.description!, style: AppTextStyles.descriptionTextStyle,maxLines: 2,),
             SizedBox(height: 10,),
-            Text(widget.card.price,style: AppTextStyles.secondaryTextStyle,),
+            Text(widget.card.price.toString(),style: AppTextStyles.secondaryTextStyle,),
           ],
       ),),
     );
@@ -52,8 +55,10 @@ class _CustomProductDisplayCardState extends State<CustomProductDisplayCard> {
 
 
 class CustomCartProductDisplay extends StatefulWidget {
-  const CustomCartProductDisplay({Key? key, required this.cart}) : super(key: key);
-  final CartModel cart;
+  const CustomCartProductDisplay({Key? key, required this.cart,}) : super(key: key);
+  final CartItem cart;
+
+
 
   @override
   State<CustomCartProductDisplay> createState() => _CustomCartProductDisplayState();
@@ -66,8 +71,6 @@ class _CustomCartProductDisplayState extends State<CustomCartProductDisplay> {
   int quantity = 1; // State variable to track the quantity
   double totalAmount  = 0.0;
 
-
-  //fu
   // Function to increment the quantity
   void incrementQuantity() {
     setState(() {
@@ -89,7 +92,7 @@ class _CustomCartProductDisplayState extends State<CustomCartProductDisplay> {
 
   void updateTotalAmount() {
     setState(() {
-      totalAmount = quantity * widget.cart.price;
+      totalAmount = quantity * widget.cart.price!.toDouble();
     });
   }
 
@@ -102,30 +105,41 @@ class _CustomCartProductDisplayState extends State<CustomCartProductDisplay> {
 
   @override
   Widget build(BuildContext context) {
+    final cartProvider = Provider.of<CartProvider>(context);
+
     return  Container(
-      height: 200,
+      color: Colors.grey[200],
+      padding: EdgeInsets.all(10),
+      height: 180,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Image(image: AssetImage(widget.cart.image), height: 140,),
-              Text(widget.cart.totalPrice,style: AppTextStyles.descriptionTextStyle2,),
-            ],
+          Expanded(
+            child: Container(
+              width: 100,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Image(image: AssetImage(widget.cart.image ?? ""), height: 140,fit: BoxFit.contain,),
+                  Text(widget.cart.totalPrice ?? '',style: AppTextStyles.descriptionTextStyle2,),
+                ],
+              ),
+            ),
           ),
+          SizedBox(width: 10,),
           Column(mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(child: Text(widget.cart.description),width: 150,),
+              Expanded(child: Container(child: Text(widget.cart.description ?? "",style: AppTextStyles.secondaryTextStyle,),width: 150,)),
               Container(
-                margin: EdgeInsets.all(10),
+                margin: EdgeInsets.all(5),
                 decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Kcolor.primaryColor,
-                  )
+                  color: Kcolor.secondaryColor,
+                  // border: Border.all(
+                  //   color: Kcolor.primaryColor,
+                  // )
                 ),
-                width: 140,
+                width: 80,
                 child: Padding(
                   padding: const EdgeInsets.only(top:3.0, bottom: 3, left: 10, right: 10),
                   child: Row(
@@ -135,18 +149,18 @@ class _CustomCartProductDisplayState extends State<CustomCartProductDisplay> {
                         onTap: decrementQuantity,
                         child: Text(
                           '-',
-                          style: TextStyle(fontSize: 25, color: Kcolor.secondaryColor, fontWeight: FontWeight.bold),
+                          style: TextStyle(fontSize: 15,color: Colors.black,fontWeight: FontWeight.bold ),
                         ),
                       ),
                       Text(
                         '$quantity', // Display the current quantity
-                        style: TextStyle(fontSize: 22, color: Kcolor.primaryColor, fontWeight: FontWeight.bold),
+                        style: TextStyle(fontSize: 15, color: Kcolor.primaryColor,fontWeight: FontWeight.bold),
                       ),
                       GestureDetector(
                         onTap: incrementQuantity,
                         child: Text(
                           '+',
-                          style: TextStyle(fontSize: 25, color: Kcolor.secondaryColor, fontWeight: FontWeight.bold),
+                          style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold),
                         ),
                       ),
                     ],
@@ -157,14 +171,18 @@ class _CustomCartProductDisplayState extends State<CustomCartProductDisplay> {
             ],
           ),
 
-          Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-              'Total: \$${totalAmount.toStringAsFixed(2)}', style: TextStyle(fontSize: 12),),
-              IconButton(onPressed: (){}, icon: Icon(FontAwesomeIcons.trash,size: 15,),)
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                'Total: \$${totalAmount.toStringAsFixed(2)}', style: TextStyle(fontSize: 12),),
+                IconButton(onPressed: (){
+                  cartProvider.removeFromCart(widget.cart);
+                }, icon: Icon(FontAwesomeIcons.trash,size: 15,),)
 
-                ],
+                  ],
+            ),
           )
         ],
       ),

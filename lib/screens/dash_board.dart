@@ -5,10 +5,13 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:orevahardware/screens/cartscreen.dart';
 import 'package:orevahardware/screens/sign_up_screen.dart';
 import 'package:orevahardware/widgets/customgrid_card.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../constants/kcolors.dart';
 import '../models/card_data.dart';
+import '../models/cart_items.dart';
+import 'information_screen.dart';
 
 class DashBoard extends StatefulWidget {
   final ZoomDrawerController zoomController;
@@ -77,6 +80,7 @@ class _DashBoardState extends State<DashBoard> {
 
   @override
   Widget build(BuildContext context) {
+    final cartProvider =  Provider.of<CartProvider>(context);
     return Scaffold(
       appBar: AppBar(
         leading: isSearching
@@ -185,7 +189,7 @@ class _DashBoardState extends State<DashBoard> {
                       shrinkWrap: false,
                       physics: BouncingScrollPhysics(),
                       scrollDirection: Axis.vertical,
-                      itemCount: myCards.length,
+                      itemCount: cartProvider.myCartItems.length,
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
                         mainAxisExtent: 320,
@@ -195,7 +199,8 @@ class _DashBoardState extends State<DashBoard> {
                         productCount++;
                         return CustomProductDisplayCard(
                           zoomController: widget.zoomController,
-                            key: UniqueKey(), card: myCards[index]
+                            key: UniqueKey(),
+                            card: cartProvider.myCartItems[index]
                         );
                       }),
                 ),
@@ -354,8 +359,8 @@ class _DashBoardState extends State<DashBoard> {
 
 class MyDrawer extends StatelessWidget {
   final VoidCallback launchInstagram;
-
-  MyDrawer({required this.launchInstagram});
+  final ZoomDrawerController zoomController;
+  MyDrawer({required this.launchInstagram, required this.zoomController});
 
   @override
   Widget build(BuildContext context) {
@@ -416,16 +421,16 @@ class MyDrawer extends StatelessWidget {
               // Handle the Settings item click
             },
           ),
-          // ListTile(
-          //   leading: Icon(FontAwesomeIcons.info, color: Kcolor.secondaryColor),
-          //   title: Text(
-          //     'Info',
-          //     style: AppTextStyles.secondaryTextStyle,
-          //   ),
-          //   onTap: () {
-          //     Navigator.push(context, MaterialPageRoute(builder: (context)=>InfoScreen(zoomController: widget.zoomController,)));
-          //   },
-          // ),
+          ListTile(
+            leading: Icon(FontAwesomeIcons.info, color: Kcolor.secondaryColor),
+            title: Text(
+              'Info',
+              style: AppTextStyles.secondaryTextStyle,
+            ),
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>InfoScreen(zoomController: zoomController)));
+            },
+          ),
           SizedBox(
             height: 200,
           ),
