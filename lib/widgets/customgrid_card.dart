@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:orevahardware/constants/kcolors.dart';
-import 'package:orevahardware/models/card_data.dart';
 import 'package:provider/provider.dart';
 
 import '../models/cart_items.dart';
@@ -44,7 +43,12 @@ class _CustomProductDisplayCardState extends State<CustomProductDisplayCard> {
           SizedBox(height: 20,),
           Text(widget.card.description!, style: AppTextStyles.descriptionTextStyle,maxLines: 2,),
             SizedBox(height: 10,),
-            Text(widget.card.price.toString(),style: AppTextStyles.secondaryTextStyle,),
+            Row(
+              children: [
+                Text('\₦',style: AppTextStyles.descriptionTextStyle3,),
+                Text(widget.card.price.toString(),style: AppTextStyles.secondaryTextStyle,),
+              ],
+            ),
           ],
       ),),
     );
@@ -116,62 +120,77 @@ class _CustomCartProductDisplayState extends State<CustomCartProductDisplay> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
+            flex: 1,
             child: Container(
               width: 100,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Image(image: AssetImage(widget.cart.image ?? ""), height: 140,fit: BoxFit.contain,),
-                  Text(widget.cart.totalPrice ?? '',style: AppTextStyles.descriptionTextStyle2,),
+                  Image(image: AssetImage(widget.cart.image ?? ""),
+                    // height: 140,
+                    fit: BoxFit.contain,),
+                  // Text(widget.cart.totalPrice ?? '',style: AppTextStyles.descriptionTextStyle2,),
+                  Row(
+                    children: [
+                      Text('\₦',style: AppTextStyles.descriptionTextStyle3,),
+                      Text(widget.cart.price.toString(),style: AppTextStyles.descriptionTextStyle2,),
+                    ],
+                  ),
+
                 ],
               ),
             ),
           ),
           SizedBox(width: 10,),
-          Column(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(child: Container(child: Text(widget.cart.description ?? "",style: AppTextStyles.secondaryTextStyle,),width: 150,)),
-              Container(
-                margin: EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                  color: Kcolor.secondaryColor,
-                  // border: Border.all(
-                  //   color: Kcolor.primaryColor,
-                  // )
-                ),
-                width: 80,
-                child: Padding(
-                  padding: const EdgeInsets.only(top:3.0, bottom: 3, left: 10, right: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      GestureDetector(
-                        onTap: decrementQuantity,
-                        child: Text(
-                          '-',
-                          style: TextStyle(fontSize: 15,color: Colors.black,fontWeight: FontWeight.bold ),
-                        ),
-                      ),
-                      Text(
-                        '$quantity', // Display the current quantity
-                        style: TextStyle(fontSize: 15, color: Kcolor.primaryColor,fontWeight: FontWeight.bold),
-                      ),
-                      GestureDetector(
-                        onTap: incrementQuantity,
-                        child: Text(
-                          '+',
-                          style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ],
+          Expanded(
+            flex: 2,
+            child: Column(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(child: Container(child: Text(widget.cart.description ?? "",style: AppTextStyles.secondaryTextStyle,),width: 150,)),
+                Container(
+                  margin: EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                    color: Kcolor.secondaryColor,
+                    // border: Border.all(
+                    //   color: Kcolor.primaryColor,
+                    // )
                   ),
-                ),
-              )
+                  width: 80,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top:3.0, bottom: 3, left: 10, right: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        GestureDetector(
+                          onTap: decrementQuantity,
+                          child: Text(
+                            '-',
+                            style: TextStyle(fontSize: 15,color: Colors.black,fontWeight: FontWeight.bold ),
+                          ),
+                        ),
+                        Text(
+                          '$quantity', // Display the current quantity
+                          style: TextStyle(fontSize: 15, color: Kcolor.primaryColor,fontWeight: FontWeight.bold),
+                        ),
+                        GestureDetector(
+                          onTap: incrementQuantity,
+                          child: Text(
+                            '+',
+                            style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
 
-            ],
+              ],
+            ),
           ),
 
           Expanded(
+            flex: 1,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -179,7 +198,8 @@ class _CustomCartProductDisplayState extends State<CustomCartProductDisplay> {
                 'Total: \$${totalAmount.toStringAsFixed(2)}', style: TextStyle(fontSize: 12),),
                 IconButton(onPressed: (){
                   cartProvider.removeFromCart(widget.cart);
-                }, icon: Icon(FontAwesomeIcons.trash,size: 15,),)
+                  print("Delete button pressed for item: ${widget.cart.description}");
+                }, icon: Icon(FontAwesomeIcons.trash,size: 15, color: Colors.red[400],),)
 
                   ],
             ),

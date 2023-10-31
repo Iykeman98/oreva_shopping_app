@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-
 class CartItem {
   String? image;
+  String? name;
   double? price;
   String? totalPrice;
   String? description;
@@ -11,6 +11,7 @@ class CartItem {
 
   CartItem(
       {this.product,
+        this.name,
       this.quantity = 1,
       this.price,
       this.totalPrice,
@@ -25,24 +26,28 @@ class CartProvider extends ChangeNotifier {
 
   List<CartItem> myCartItems = [
     CartItem(
-        price: 12,
+      name:"Pole",
+        price: 120000,
         image: 'assets/21.jpeg',
         description:
             'Leather finished hanging poles With and rust and noise free',
         totalPrice: '\$400.00'),
     CartItem(
+        name:"Bolts",
         price: 60,
         image: 'assets/18.jpg',
         description:
             'Leather finished hanging poles With and rust and noise free',
         totalPrice: '\$290.00'),
     CartItem(
+        name:"Sinks",
         price: 2,
         image: 'assets/21.jpeg',
         description:
             'Leather finished hanging poles With and rust and noise free',
         totalPrice: '\$890.00'),
     CartItem(
+        name:"Drawer",
         price: 900,
         image: 'assets/18.jpg',
         description:
@@ -59,31 +64,31 @@ class CartProvider extends ChangeNotifier {
       }
     }
 
-    _cartItems.add(CartItem(
-        product: product,
-        price: product.price,
-        image: product.image,
-        description: product.description,
-        totalPrice: product.totalPrice,
-        quantity: product.quantity));
-    notifyListeners();
+    final newCartItem = CartItem(
+      product: product,
+      price: product.price,
+      image: product.image,
+      description: product.description,
+      totalPrice: product.totalPrice,
+      quantity: 1, // Start with a quantity of 1 for a new item
+    );
+    _cartItems.add(newCartItem);
+    notifyListeners(); // Notify the UI that the cart has been updated
   }
 
-
-
-  void removeFromCart(CartItem product) {
-    for (var item in _cartItems) {
-      if (item.product == product) {
-        if (item.quantity > 1) {
-          item.quantity--;
-        } else {
-          _cartItems.remove(item);
-        }
-        notifyListeners();
-        return;
-      }
-    }
-  }
+  // void removeFromCart(CartItem product) {
+  //   for (var item in _cartItems) {
+  //     if (item.product == product) {
+  //       if (item.quantity > 1) {
+  //         item.quantity--;
+  //       } else {
+  //         _cartItems.remove(item);
+  //       }
+  //       notifyListeners();
+  //       return;
+  //     }
+  //   }
+  // }
 
   // void removeFromCart(CartItem product) {
   //   List<CartItem> itemsToRemove = [];
@@ -103,7 +108,20 @@ class CartProvider extends ChangeNotifier {
   //   notifyListeners();
   // }
 
+  void removeFromCart(CartItem product) {
+    for (var item in _cartItems) {
+      if (item.product == product) {
+        if (item.quantity > 1) {
+          item.quantity--;
+        } else {
+          _cartItems.remove(item);
+        }
+        notifyListeners(); // Notify the UI that the cart has been updated
+        return;
+      }
 
+    }
+  }
   double getTotalPrice() {
     double totalPrice = 0.0;
     for (var item in _cartItems) {
@@ -111,5 +129,5 @@ class CartProvider extends ChangeNotifier {
     }
     return totalPrice;
   }
-}
 
+}

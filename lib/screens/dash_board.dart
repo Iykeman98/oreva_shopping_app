@@ -9,7 +9,6 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../constants/kcolors.dart';
-import '../models/card_data.dart';
 import '../models/cart_items.dart';
 import 'information_screen.dart';
 
@@ -28,6 +27,9 @@ class _DashBoardState extends State<DashBoard> {
   TextEditingController searchController = TextEditingController();
   late String? instagramUrl;
   int productCount = 0;
+  late List<CartItem> searchResults;
+   late CartProvider cartProvider;
+
 
   @override
   void initState() {
@@ -35,6 +37,9 @@ class _DashBoardState extends State<DashBoard> {
     super.initState();
     //initialize the Instagram url when it is created
     instagramUrl = widget.instagramUrl;
+    // searchResults = List<CartItem>.from(cartProvider.myCartItems); // Initialize searchResults
+    // cartProvider = Provider.of<CartProvider>(context, listen: false);
+    // cartProvider = CartProvider();
   }
 
   void startSearch() {
@@ -50,9 +55,6 @@ class _DashBoardState extends State<DashBoard> {
     searchController.clear();
   }
 
-  void performSearch(String query) {
-    //search logic here
-  }
   void _handleKeyEvent(RawKeyEvent event) {
     if (event is RawKeyUpEvent) {
       if (event.logicalKey == LogicalKeyboardKey.enter) {
@@ -61,6 +63,27 @@ class _DashBoardState extends State<DashBoard> {
       }
     }
   }
+  void performSearch(String query) {
+    if (query.isEmpty) {
+      // If the query is empty, reset the productCount and show all items
+      setState(() {
+        productCount = 0;
+      });
+    } else {
+      // Filter items that match the search query
+      final filteredItems = cartProvider.myCartItems
+          .where((item) => item.description!.toLowerCase().contains(query.toLowerCase()))
+          .toList();
+
+      setState(() {
+        productCount = filteredItems.length;
+        // Update the productCount and reassign the filtered items to the grid
+        searchResults = filteredItems;
+      });
+    }
+  }
+
+
 
   void launchInstagram() async {
     final instagramUri = Uri.parse(widget.instagramUrl);

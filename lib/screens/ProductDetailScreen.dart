@@ -314,9 +314,14 @@ class _ProductDetailState extends State<ProductDetail> {
                             SizedBox(
                               height: 10,
                             ),
-                            Text(
-                              widget.selectedProduct!.price.toString(),
-                              style: AppTextStyles.secondaryTextStyle,
+                            Row(
+                              children: [
+                                Text('\₦',style: AppTextStyles.descriptionTextStyle3,),
+                                Text(
+                                  widget.selectedProduct!.price.toString(),
+                                  style: AppTextStyles.secondaryTextStyle,
+                                ),
+                              ],
                             ),
                             SizedBox(
                               height: 10,

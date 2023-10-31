@@ -50,6 +50,11 @@ class AppTextStyles {
     letterSpacing: 1,
     fontWeight: FontWeight.w500,
     fontSize: 13,
+  );static const TextStyle descriptionTextStyle3 = TextStyle(
+color:Colors.green,
+    letterSpacing: 1,
+    fontWeight: FontWeight.w500,
+    fontSize: 13,
   );
   static const TextStyle formFieldHintTextStyle = TextStyle(
     color: Kcolor.secondaryTextColor,
