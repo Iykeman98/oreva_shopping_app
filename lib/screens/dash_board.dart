@@ -1,8 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:orevahardware/screens/cartscreen.dart';
+import 'package:orevahardware/screens/sign_in_screen.dart';
 import 'package:orevahardware/screens/sign_up_screen.dart';
 import 'package:orevahardware/widgets/customgrid_card.dart';
 import 'package:provider/provider.dart';
@@ -27,8 +29,10 @@ class _DashBoardState extends State<DashBoard> {
   TextEditingController searchController = TextEditingController();
   late String? instagramUrl;
   int productCount = 0;
-  late List<CartItem> searchResults;
-   late CartProvider cartProvider;
+   List<CartItem>? searchResults;
+    CartProvider? cartProvider;
+
+
 
 
   @override
@@ -37,10 +41,14 @@ class _DashBoardState extends State<DashBoard> {
     super.initState();
     //initialize the Instagram url when it is created
     instagramUrl = widget.instagramUrl;
-    // searchResults = List<CartItem>.from(cartProvider.myCartItems); // Initialize searchResults
+
+   cartProvider != null ? searchResults = List<CartItem>.from(cartProvider!.myCartItems): print('object'); // Initialize searchResults
+    cartProvider = Provider.of<CartProvider>(context, listen: false);
+    // cartProvider = CartProvider();  // Initialize the cartProvider
     // cartProvider = Provider.of<CartProvider>(context, listen: false);
-    // cartProvider = CartProvider();
+
   }
+
 
   void startSearch() {
     setState(() {
@@ -64,23 +72,24 @@ class _DashBoardState extends State<DashBoard> {
     }
   }
   void performSearch(String query) {
+    List<Map<String, dynamic>> filteredItems = [];
     if (query.isEmpty) {
       // If the query is empty, reset the productCount and show all items
       setState(() {
         productCount = 0;
       });
+     final filteredItems = cartProvider!.myCartItems;
     } else {
       // Filter items that match the search query
-      final filteredItems = cartProvider.myCartItems
-          .where((item) => item.description!.toLowerCase().contains(query.toLowerCase()))
+      final filteredItems = cartProvider!.myCartItems
+          .where((item) => item.name!.toLowerCase().contains(query.toLowerCase()))
           .toList();
-
-      setState(() {
-        productCount = filteredItems.length;
-        // Update the productCount and reassign the filtered items to the grid
-        searchResults = filteredItems;
-      });
     }
+    setState(() {
+      productCount = filteredItems.length;
+      // Update the productCount and reassign the filtered items to the grid
+      searchResults = filteredItems.cast<CartItem>();
+    });
   }
 
 
@@ -130,6 +139,7 @@ class _DashBoardState extends State<DashBoard> {
                 focusNode: FocusNode(),
                 onKey: _handleKeyEvent,
                 child: TextField(
+                  onChanged: (value) => performSearch(value),
                   style: TextStyle(color: Colors.white),
                   controller: searchController,
                   decoration: InputDecoration(
@@ -212,6 +222,7 @@ class _DashBoardState extends State<DashBoard> {
                       shrinkWrap: false,
                       physics: BouncingScrollPhysics(),
                       scrollDirection: Axis.vertical,
+                      // itemCount: cartProvider.myCartItems.length,
                       itemCount: cartProvider.myCartItems.length,
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
@@ -229,136 +240,6 @@ class _DashBoardState extends State<DashBoard> {
                 ),
                 Divider(
                   color: Kcolor.secondaryColor,
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Text(
-                  'Info',
-                  style: AppTextStyles.headerTextStyle,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  'About us',
-                  style: AppTextStyles.secondaryTextStyle,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  'Return & Refund',
-                  style: AppTextStyles.secondaryTextStyle,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  'Shipping Policy',
-                  style: AppTextStyles.secondaryTextStyle,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  'Privacy Policy',
-                  style: AppTextStyles.secondaryTextStyle,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  'Terms of Service',
-                  style: AppTextStyles.secondaryTextStyle,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  'Do not Sell My Personal Information',
-                  style: AppTextStyles.secondaryTextStyle,
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Text(
-                  'Quick links',
-                  style: AppTextStyles.headerTextStyle,
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Text(
-                  'FAQ',
-                  style: AppTextStyles.secondaryTextStyle,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  'Installation',
-                  style: AppTextStyles.secondaryTextStyle,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  'Track Your Order',
-                  style: AppTextStyles.secondaryTextStyle,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  'Contact Us',
-                  style: AppTextStyles.secondaryTextStyle,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  'Our mission',
-                  style: AppTextStyles.headerTextStyle,
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Text(
-                  'Our unwavering dedication is to supply you with premium kitchen and bathroom products that not only enhance the functionality of your spaces but also enrich your daily life',
-                  style: AppTextStyles.descriptionTextStyle,
-                ),
-                SizedBox(
-                  height: 40,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    IconButton(
-                      icon: Icon(
-                        FontAwesomeIcons.facebook,
-                        color: Kcolor.primaryColor,
-                      ),
-                      onPressed: () {},
-                    ),
-                    IconButton(
-                      icon: Icon(
-                        FontAwesomeIcons.instagram,
-                        color: Kcolor.primaryColor,
-                      ),
-                      onPressed: () {
-                        launchInstagram;
-                        print('ig');
-                      },
-                    ),
-                    IconButton(
-                      icon: Icon(
-                        FontAwesomeIcons.youtube,
-                        color: Kcolor.primaryColor,
-                      ),
-                      onPressed: () {},
-                    ),
-                  ],
                 ),
                 Divider(
                   color: Kcolor.secondaryColor,
@@ -463,11 +344,19 @@ class MyDrawer extends StatelessWidget {
               children: [
                 IconButton(
                   icon: Icon(Icons.supervised_user_circle_rounded),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=> SignInScreen(zoomController: zoomController)));
+                  },
                 ),
-                Text(
-                  'Log in',
-                  style: AppTextStyles.headerTextStyle,
+                GestureDetector(
+                  onTap: (){
+                    FirebaseAuth.instance.signOut();
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=> SignInScreen(zoomController: zoomController)));
+                  },
+                  child: Text(
+                    'Sign out',
+                    style: AppTextStyles.headerTextStyle,
+                  ),
                 ),
               ],
             ),

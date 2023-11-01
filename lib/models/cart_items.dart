@@ -52,6 +52,33 @@ class CartProvider extends ChangeNotifier {
         image: 'assets/18.jpg',
         description:
             'Leather finished hanging poles With and rust and noise free',
+        totalPrice: '\$240.00'), CartItem(
+      name:"Pole",
+        price: 120000,
+        image: 'assets/21.jpeg',
+        description:
+            'Leather finished hanging poles With and rust and noise free',
+        totalPrice: '\$400.00'),
+    CartItem(
+        name:"Bolts",
+        price: 60,
+        image: 'assets/18.jpg',
+        description:
+            'Leather finished hanging poles With and rust and noise free',
+        totalPrice: '\$290.00'),
+    CartItem(
+        name:"Sinks",
+        price: 2,
+        image: 'assets/21.jpeg',
+        description:
+            'Leather finished hanging poles With and rust and noise free',
+        totalPrice: '\$890.00'),
+    CartItem(
+        name:"Drawer",
+        price: 900,
+        image: 'assets/18.jpg',
+        description:
+            'Leather finished hanging poles With and rust and noise free',
         totalPrice: '\$240.00'),
   ];
 

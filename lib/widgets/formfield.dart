@@ -6,21 +6,33 @@ class CustomFormField extends StatelessWidget {
   final String label;
   final String hintText;
   final Function()? onTap;
-  final IconData? icon;
+  final Function()? onTapSuffixIcon;
+  final IconData? suffixIcon;
+  final String? Function(String?)? validator;
+  final String? Function(String?)? onChanged;
+  final TextEditingController? controller;
+
 
   const CustomFormField({
     required this.onTap,
     required this.label,
     required this.hintText,
     super.key,
-   this.icon,
+   this.suffixIcon,
+  this.validator,
+  this.onChanged,
+  this.onTapSuffixIcon,
+  this.controller,
   });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: 20.0),
-      child: TextField(
+      child: TextFormField(
+        controller: controller,
+        onChanged: onChanged,
+        validator:  validator,
         style: AppTextStyles.formFieldTextStyle,
         decoration: InputDecoration(
           label: Text(
@@ -40,7 +52,9 @@ class CustomFormField extends StatelessWidget {
             ),
           ),
           contentPadding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 10),
-          suffixIcon: Icon(icon, size: 16,color: Kcolor.secondaryColor,)
+          suffixIcon: GestureDetector(
+            onTap: onTapSuffixIcon,
+              child: Icon(suffixIcon, size: 16,color: Kcolor.secondaryColor,))
         ),
       ),
     );

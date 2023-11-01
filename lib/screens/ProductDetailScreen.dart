@@ -165,22 +165,6 @@ class _ProductDetailState extends State<ProductDetail> {
             centerTitle: true,
             title: Text("OrevaHardware", style: AppTextStyles.appBarTextStyle),
             actions: [
-              // Padding(
-              //   padding: EdgeInsets.only(right: 10),
-              //   child: IconButton(
-              //     onPressed: () {
-              //       Navigator.push(
-              //         context,
-              //         MaterialPageRoute(
-              //           builder: (context) =>
-              //               CartScreen(zoomController: widget.zoomController),
-              //         ),
-              //       );
-              //     },
-              //     icon: Icon(Icons.shopping_bag_sharp,
-              //         color: Kcolor.secondaryColor, size: 25),
-              //   ),
-              // ),
               Consumer<CartProvider>(
                 builder: (context, cartProvider, child) {
                   int cartItemCount = cartProvider.cartItems.length;

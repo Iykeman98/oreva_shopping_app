@@ -260,7 +260,7 @@ class _CheckOutState extends State<CheckOut> {
                             CustomFormField(onTap: (){}, label: 'First name', hintText: 'First name'),
                             CustomFormField(onTap: (){}, label: 'Last name', hintText: 'Last name'),
                             CustomFormField(onTap: (){}, label: 'Company (optional)', hintText: 'Company (optional)'),
-                            CustomFormField(onTap: (){}, label: 'Address', hintText: 'Address', icon: FontAwesomeIcons.magnifyingGlass, ),
+                            CustomFormField(onTap: (){}, label: 'Address', hintText: 'Address', suffixIcon: FontAwesomeIcons.magnifyingGlass, ),
                             SizedBox(height: 10,),
                             Row(mainAxisAlignment: MainAxisAlignment.start,
                               children: [
@@ -270,9 +270,9 @@ class _CheckOutState extends State<CheckOut> {
                             ),
                             SizedBox(height: 10,),
                             CustomFormField(onTap: (){}, label: 'Company (optional)', hintText: 'Company (optional)'),
-                            CustomFormField(onTap: (){}, label: 'Address', hintText: 'Address', icon: FontAwesomeIcons.chevronDown, ),
+                            CustomFormField(onTap: (){}, label: 'Address', hintText: 'Address', suffixIcon: FontAwesomeIcons.chevronDown, ),
                             CustomFormField(onTap: (){}, label: 'Company (optional)', hintText: 'Company (optional)'),
-                            CustomFormField(onTap: (){}, label: 'Address', hintText: 'Address', icon: FontAwesomeIcons.circleQuestion, ),
+                            CustomFormField(onTap: (){}, label: 'Address', hintText: 'Address', suffixIcon: FontAwesomeIcons.circleQuestion, ),
                             Row(mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 Checkbox(

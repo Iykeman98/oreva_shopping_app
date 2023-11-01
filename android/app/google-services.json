@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "884592395991",
+    "project_id": "oreva-65a7e",
+    "storage_bucket": "oreva-65a7e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:884592395991:android:c506ad3937cc9643229292",
+        "android_client_info": {
+          "package_name": "com.example.orevahardware"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBbm1N3kEVmApfrwDm_mQjwM5WK68T7J-Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

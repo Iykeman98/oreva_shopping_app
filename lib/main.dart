@@ -1,13 +1,20 @@
 
+import 'package:firebase_app_check/firebase_app_check.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:orevahardware/models/cart_items.dart';
 import 'package:orevahardware/screens/dash_board.dart';
+import 'package:orevahardware/screens/sign_in_screen.dart';
+import 'package:orevahardware/screens/sign_up_screen.dart';
 import 'package:provider/provider.dart';
 
 import 'constants/kcolors.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  await FirebaseAppCheck.instance.activate();
   runApp(
     ChangeNotifierProvider(
     create: (context) {
@@ -41,7 +48,10 @@ class MyApp extends StatelessWidget {
         controller: zoomController,
         style: DrawerStyle.defaultStyle, // Choose your desired style
         menuScreen: MyDrawer(launchInstagram: () {  }, zoomController: zoomController,), // Your drawer content
-        mainScreen: DashBoard(zoomController: zoomController, instagramUrl: 'https://www.instagram.com/orevahardware/related_profiles/',), // Make sure this line is correct
+        // mainScreen: DashBoard(zoomController: zoomController, instagramUrl: 'https://www.instagram.com/orevahardware/related_profiles/',),
+        // mainScreen: SignInScreen(zoomController: zoomController,),
+        mainScreen: SignUpScreen(zoomController: zoomController,),
+
       ),
     );
   }
