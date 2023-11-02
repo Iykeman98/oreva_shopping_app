@@ -44,15 +44,9 @@ class MyApp extends StatelessWidget {
           titleTextStyle: TextStyle(color: Kcolor.primaryColor)
         )
       ),
-      home:  ZoomDrawer(
-        controller: zoomController,
-        style: DrawerStyle.defaultStyle, // Choose your desired style
-        menuScreen: MyDrawer(launchInstagram: () {  }, zoomController: zoomController,), // Your drawer content
-        // mainScreen: DashBoard(zoomController: zoomController, instagramUrl: 'https://www.instagram.com/orevahardware/related_profiles/',),
-        // mainScreen: SignInScreen(zoomController: zoomController,),
-        mainScreen: SignUpScreen(zoomController: zoomController,),
+      home:   SignInScreen(),
+      // home:   DashBoard(instagramUrl: '',),
 
-      ),
     );
   }
 }

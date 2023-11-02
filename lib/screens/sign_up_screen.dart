@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:orevahardware/constants/kcolors.dart';
+import 'package:orevahardware/global/common/toast.dart';
 import 'package:orevahardware/screens/dash_board.dart';
 import 'package:orevahardware/screens/sign_in_screen.dart';
 import 'package:orevahardware/user_auth/firebase_auth_service.dart';
@@ -10,10 +11,10 @@ import '../widgets/dismissKeyboardOnTap.dart';
 import '../widgets/formfield.dart';
 
 class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({Key? key, required this.zoomController, this.toggleView})
+  const SignUpScreen({Key? key,  this.zoomController, this.toggleView})
       : super(key: key);
 
-  final ZoomDrawerController zoomController;
+  final ZoomDrawerController? zoomController;
   final Function? toggleView;
 
   @override
@@ -34,6 +35,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   String email = "";
   String password = "";
   String error = "";
+  bool _creating = false;
 
   @override
   void dispose() {
@@ -185,9 +187,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 ),
                               ],
                             ),
+                            SizedBox(height: 15),
                             CustomSignInAndUpButton(
-                              text: "Create",
                               onTap: _signUp,
+                              isSigning: _creating,
                             )
                           ],
                         ),
@@ -204,21 +207,28 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   void _signUp() async {
+    setState(() {
+      _creating = true;
+    });
+
     String firstname = _firstnameController.text;
     String lastname = _lastnameController.text;
     String email = _emailController.text;
     String password = _passwordController.text;
 
     User? user = await _auth.signUpWithEmailAndPassword(email, password);
+    setState(() {
+      _creating = false;
+    });
 
     if (user != null) {
-      print('user sign up is success');
+      successShowToast(message: 'user sign up is success');
       Navigator.push(context,
           MaterialPageRoute(
               builder: (context) => DashBoard(
                 zoomController: widget.zoomController, instagramUrl: '',)));
     }else{
-    print('Some error');
+    failedShowToast(message: 'Some error');
     }
   }
 }

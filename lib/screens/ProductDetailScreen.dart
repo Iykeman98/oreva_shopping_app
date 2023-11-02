@@ -12,12 +12,12 @@ import '../widgets/custom_flat_button.dart';
 import 'cartscreen.dart';
 
 class ProductDetail extends StatefulWidget {
-  final ZoomDrawerController zoomController;
+  final ZoomDrawerController? zoomController;
   final CartItem? selectedProduct;
   final CartModel? selectedcart;
 
   const ProductDetail(
-      {Key? key, required this.zoomController, this.selectedProduct, this.selectedcart})
+      {Key? key,  this.zoomController, this.selectedProduct, this.selectedcart})
       : super(key: key);
 
 
@@ -125,7 +125,7 @@ class _ProductDetailState extends State<ProductDetail> {
         ),),
               onPressed: () {
                 Navigator.of(context).pop();
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>CheckOut(zoomController: widget.zoomController)));
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>CheckOut()));
               },
             ),
             TextButton(

@@ -12,9 +12,9 @@ import '../widgets/custom_summary_list_tile.dart';
 
 class CheckOut extends StatefulWidget {
   final CartModel? selectedProduct;
-  final ZoomDrawerController zoomController;
+  final ZoomDrawerController? zoomController;
 
-  const CheckOut({Key? key, this.selectedProduct, required  this.zoomController}) : super(key: key);
+  const CheckOut({Key? key, this.selectedProduct,  this.zoomController}) : super(key: key);
 
   @override
   State<CheckOut> createState() => _CheckOutState();

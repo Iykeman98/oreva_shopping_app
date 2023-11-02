@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:orevahardware/constants/kcolors.dart';
+import 'package:orevahardware/global/common/toast.dart';
 import 'package:orevahardware/screens/dash_board.dart';
 import 'package:orevahardware/widgets/dismissKeyboardOnTap.dart';
 
@@ -10,10 +11,10 @@ import '../user_auth/firebase_auth_service.dart';
 import '../widgets/formfield.dart';
 
 class SignInScreen extends StatefulWidget {
-  final ZoomDrawerController zoomController; // Define zoomController as a property.
+  final ZoomDrawerController? zoomController; // Define zoomController as a property.
   final Function? toggleView;
 
-  const SignInScreen({Key? key, required this.zoomController, this.toggleView})
+  const SignInScreen({Key? key,  this.zoomController, this.toggleView})
       : super(key: key);
 
   @override
@@ -22,6 +23,8 @@ class SignInScreen extends StatefulWidget {
 
 class _SignInScreenState extends State<SignInScreen> {
   final Firebase_Auth_Service _auth = Firebase_Auth_Service();
+  final zoomController = ZoomDrawerController();
+
 
 
   TextEditingController _emailController = TextEditingController();
@@ -39,6 +42,7 @@ class _SignInScreenState extends State<SignInScreen> {
   String password = "";
   String error = "";
   bool _isFirstIcon = true;
+  bool _isSigning = false;
 
 
   void _toggleIcon() {
@@ -120,9 +124,10 @@ class _SignInScreenState extends State<SignInScreen> {
 
                             SizedBox(height: 25),
                             CustomSignInAndUpButton(
-                              text: "Sign in",
+                              isSigning: _isSigning,
                               onTap: _signIn,
                             ),
+
                             SizedBox(
                               height: 20,
                             ),
@@ -167,20 +172,26 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
   void _signIn() async {
+setState(() {
+  _isSigning = true;
+});
 
     String email = _emailController.text;
     String password = _passwordController.text;
 
     User? user = await _auth.signInWithEmailAndPassword(email, password);
 
+    setState(() {
+      _isSigning = true;
+    });
     if (user != null) {
-      print('user sign in is success');
-      Navigator.push(context,
+      successShowToast(message: 'user sign in is successful');
+      Navigator.pushReplacement(context,
           MaterialPageRoute(
               builder: (context) => DashBoard(
                 zoomController: widget.zoomController, instagramUrl: '',)));
     }else{
-      print('Some error');
+      failedShowToast(message: 'Some error');
     }
   }
 }

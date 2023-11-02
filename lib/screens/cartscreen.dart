@@ -9,11 +9,11 @@ import '../models/cart_items.dart';
 import '../widgets/customgrid_card.dart';
 
 class CartScreen extends StatefulWidget {
-  final ZoomDrawerController zoomController; // Add this line
+  final ZoomDrawerController? zoomController; // Add this line
   final CartItem? card;
 
 
-  const CartScreen({Key? key, required this.zoomController, this.card}) : super(key: key);
+  const CartScreen({Key? key,  this.zoomController, this.card}) : super(key: key);
 
   @override
   State<CartScreen> createState() => _CartScreenState();

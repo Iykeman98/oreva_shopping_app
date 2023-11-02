@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:orevahardware/global/common/toast.dart';
 import 'package:orevahardware/screens/cartscreen.dart';
 import 'package:orevahardware/screens/sign_in_screen.dart';
 import 'package:orevahardware/screens/sign_up_screen.dart';
@@ -15,10 +16,10 @@ import '../models/cart_items.dart';
 import 'information_screen.dart';
 
 class DashBoard extends StatefulWidget {
-  final ZoomDrawerController zoomController;
+  final ZoomDrawerController? zoomController;
   final String instagramUrl;
 
-  const DashBoard({Key? key, required this.instagramUrl, required this.zoomController}) : super(key: key);
+  const DashBoard({Key? key, required this.instagramUrl,  this.zoomController}) : super(key: key);
 
   @override
   State<DashBoard> createState() => _DashBoardState();
@@ -108,163 +109,167 @@ class _DashBoardState extends State<DashBoard> {
     }
   }
 
+  final zoomController = ZoomDrawerController();
 
 
   @override
   Widget build(BuildContext context) {
     final cartProvider =  Provider.of<CartProvider>(context);
-    return Scaffold(
-      appBar: AppBar(
-        leading: isSearching
-            ? IconButton(
-                icon: Icon(
-                  FontAwesomeIcons.xmark,
-                  color: Colors.white,
+    return ZoomDrawer(
+      menuScreen: MyDrawer(zoomController: zoomController),
+      mainScreen: Scaffold(
+        appBar: AppBar(
+          leading: isSearching
+              ? IconButton(
+                  icon: Icon(
+                    FontAwesomeIcons.xmark,
+                    color: Colors.white,
+                  ),
+                  onPressed: endSearch,
+                )
+              : IconButton(
+                  icon: Icon(
+                    Icons.menu,
+                    color: Kcolor.secondaryColor,
+                  ),
+                  onPressed: () {
+                    widget.zoomController?.toggle!(); // Open the drawer
+                  },
                 ),
-                onPressed: endSearch,
-              )
-            : IconButton(
-                icon: Icon(
-                  Icons.menu,
-                  color: Kcolor.secondaryColor,
-                ),
-                onPressed: () {
-                  widget.zoomController.toggle!(); // Open the drawer
-                },
+          backgroundColor: Kcolor.primaryColor,
+          centerTitle: true,
+          title: isSearching
+              ? RawKeyboardListener(
+                  focusNode: FocusNode(),
+                  onKey: _handleKeyEvent,
+                  child: TextField(
+                    onChanged: (value) => performSearch(value),
+                    style: TextStyle(color: Colors.white),
+                    controller: searchController,
+                    decoration: InputDecoration(
+                        hintText: 'Search',
+                        hintStyle: TextStyle(
+                          color: Colors.white,
+                        )),
+                  ),
+                )
+              : Text("OrevaHardware", style: AppTextStyles.appBarTextStyle),
+          actions: [
+            Padding(
+              padding: EdgeInsets.only(right: 10),
+              child: Row(
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.search,
+                        color: Kcolor.secondaryColor, size: 25),
+                    onPressed: startSearch,
+                  ),
+                  IconButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    CartScreen(),),);
+                      },
+                      icon: Icon(Icons.shopping_bag_sharp,
+                          color: Kcolor.secondaryColor, size: 25)),
+                ],
               ),
-        backgroundColor: Kcolor.primaryColor,
-        centerTitle: true,
-        title: isSearching
-            ? RawKeyboardListener(
-                focusNode: FocusNode(),
-                onKey: _handleKeyEvent,
-                child: TextField(
-                  onChanged: (value) => performSearch(value),
-                  style: TextStyle(color: Colors.white),
-                  controller: searchController,
-                  decoration: InputDecoration(
-                      hintText: 'Search',
-                      hintStyle: TextStyle(
-                        color: Colors.white,
-                      )),
-                ),
-              )
-            : Text("OrevaHardware", style: AppTextStyles.appBarTextStyle),
-        actions: [
-          Padding(
-            padding: EdgeInsets.only(right: 10),
-            child: Row(
-              children: [
-                IconButton(
-                  icon: Icon(Icons.search,
-                      color: Kcolor.secondaryColor, size: 25),
-                  onPressed: startSearch,
-                ),
-                IconButton(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  CartScreen(zoomController: widget.zoomController),),);
-                    },
-                    icon: Icon(Icons.shopping_bag_sharp,
-                        color: Kcolor.secondaryColor, size: 25)),
-              ],
             ),
-          ),
-        ],
-      ),
-      body: SafeArea(
-          child: ListView(
-        children: [
-          Padding(
-            padding: EdgeInsets.only(top: 30, left: 15, right: 15),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Products',
-                  style: AppTextStyles.headerTextStyle,
-                ),
-                SizedBox(
-                  height: 50,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.keyboard_double_arrow_down,
-                            color: Kcolor.secondaryTextColor,
-                          ),
-                          Text(
-                            "Filter and Sort",
-                            style: AppTextStyles.secondaryTextStyle,
-                          )
-                        ],
+          ],
+        ),
+        body: SafeArea(
+            child: ListView(
+          children: [
+            Padding(
+              padding: EdgeInsets.only(top: 30, left: 15, right: 15),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Products',
+                    style: AppTextStyles.headerTextStyle,
+                  ),
+                  SizedBox(
+                    height: 50,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.keyboard_double_arrow_down,
+                              color: Kcolor.secondaryTextColor,
+                            ),
+                            Text(
+                              "Filter and Sort",
+                              style: AppTextStyles.secondaryTextStyle,
+                            )
+                          ],
+                        ),
                       ),
-                    ),
-                    Text(
-                      "$productCount Products",
-                      style: AppTextStyles.secondaryTextStyle,
-                    )
-                  ],
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                SizedBox(
-                  height: 700,
-                  child: GridView.builder(
-                      shrinkWrap: false,
-                      physics: BouncingScrollPhysics(),
-                      scrollDirection: Axis.vertical,
-                      // itemCount: cartProvider.myCartItems.length,
-                      itemCount: cartProvider.myCartItems.length,
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        mainAxisExtent: 320,
-                        crossAxisSpacing: 5,
-                      ),
-                      itemBuilder: (context, index) {
-                        productCount++;
-                        return CustomProductDisplayCard(
-                          zoomController: widget.zoomController,
-                            key: UniqueKey(),
-                            card: cartProvider.myCartItems[index]
-                        );
-                      }),
-                ),
-                Divider(
-                  color: Kcolor.secondaryColor,
-                ),
-                Divider(
-                  color: Kcolor.secondaryColor,
-                ),
-              ],
-            ),
-          )
-        ],
-      )),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context)=>SignUpScreen(zoomController: widget.zoomController,)));
-        },
-        backgroundColor: Kcolor.primaryColor,
-        foregroundColor: Kcolor.secondaryColor,
-        child: Icon(FontAwesomeIcons.solidMessage),
+                      Text(
+                        "$productCount Products",
+                        style: AppTextStyles.secondaryTextStyle,
+                      )
+                    ],
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  SizedBox(
+                    height: 700,
+                    child: GridView.builder(
+                        shrinkWrap: false,
+                        physics: BouncingScrollPhysics(),
+                        scrollDirection: Axis.vertical,
+                        // itemCount: cartProvider.myCartItems.length,
+                        itemCount: cartProvider.myCartItems.length,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          mainAxisExtent: 320,
+                          crossAxisSpacing: 5,
+                        ),
+                        itemBuilder: (context, index) {
+                          productCount++;
+                          return CustomProductDisplayCard(
+
+                              key: UniqueKey(),
+                              card: cartProvider.myCartItems[index]
+                          );
+                        }),
+                  ),
+                  Divider(
+                    color: Kcolor.secondaryColor,
+                  ),
+                  Divider(
+                    color: Kcolor.secondaryColor,
+                  ),
+                ],
+              ),
+            )
+          ],
+        )),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>SignUpScreen()));
+          },
+          backgroundColor: Kcolor.primaryColor,
+          foregroundColor: Kcolor.secondaryColor,
+          child: Icon(FontAwesomeIcons.solidMessage),
+        ),
       ),
     );
   }
 }
 
 class MyDrawer extends StatelessWidget {
-  final VoidCallback launchInstagram;
+  final VoidCallback? launchInstagram;
   final ZoomDrawerController zoomController;
-  MyDrawer({required this.launchInstagram, required this.zoomController});
+  MyDrawer({ this.launchInstagram, required this.zoomController});
 
   @override
   Widget build(BuildContext context) {
@@ -352,6 +357,7 @@ class MyDrawer extends StatelessWidget {
                   onTap: (){
                     FirebaseAuth.instance.signOut();
                     Navigator.push(context, MaterialPageRoute(builder: (context)=> SignInScreen(zoomController: zoomController)));
+                    successShowToast(message: "Successfully signed out");
                   },
                   child: Text(
                     'Sign out',
@@ -380,7 +386,7 @@ class MyDrawer extends StatelessWidget {
                     color: Colors.white,
                   ),
                   onPressed: () {
-                    launchInstagram();
+                    launchInstagram!();
                     print('ig');
                   },
                 ),

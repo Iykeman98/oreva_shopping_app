@@ -8,9 +8,9 @@ import '../models/cart_items.dart';
 import '../screens/ProductDetailScreen.dart';
 
 class CustomProductDisplayCard extends StatefulWidget {
-  const CustomProductDisplayCard({Key? key, required this.card,  required this.zoomController}) : super(key: key);
+  const CustomProductDisplayCard({Key? key, required this.card,   this.zoomController}) : super(key: key);
   final CartItem card;
-  final ZoomDrawerController zoomController;
+  final ZoomDrawerController? zoomController;
 
   @override
   State<CustomProductDisplayCard> createState() => _CustomProductDisplayCardState();
@@ -27,7 +27,6 @@ class _CustomProductDisplayCardState extends State<CustomProductDisplayCard> {
           context,
           MaterialPageRoute(
             builder: (context) => ProductDetail(
-              zoomController: widget.zoomController,
               selectedProduct: widget.card, // Pass the selected product here
             ),
           ),
