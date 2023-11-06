@@ -133,11 +133,11 @@ class _CartScreenState extends State<CartScreen> {
                         ),
                       ),
                       SizedBox(height: 50,),
-                      Text('Have an account?', style: AppTextStyles.secondaryTextStyle,), SizedBox(height: 10,),
-                      Text('Log in to check out faster.', style: AppTextStyles.descriptionTextStyle,),
+                      // Text('Have an account?', style: AppTextStyles.secondaryTextStyle,), SizedBox(height: 10,),
+                      // Text('Log in to check out faster.', style: AppTextStyles.descriptionTextStyle,),
 
                       Padding(
-                        padding: const EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(20),
                         child: Column(
                           children: [
                             Row(
@@ -180,7 +180,8 @@ class _CartScreenState extends State<CartScreen> {
                 )
           )
 
-                     : Container(
+                     : SizedBox(height: 5,),
+                Container(
                         child: ListView.builder(
                           shrinkWrap: true,
                           physics: NeverScrollableScrollPhysics(),
@@ -189,7 +190,7 @@ class _CartScreenState extends State<CartScreen> {
                           itemBuilder: (ctx, index) {
                             final cartItem = cartProvider.cartItems[index];
                             return Padding(
-                              padding: const EdgeInsets.only(bottom: 20.0),
+                              padding: const EdgeInsets.only(bottom: 10.0),
                               child: CustomCartProductDisplay(cart: cartItem,),
                             );
                           },

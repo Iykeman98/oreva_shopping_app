@@ -94,6 +94,7 @@ class CartProvider extends ChangeNotifier {
     final newCartItem = CartItem(
       product: product,
       price: product.price,
+      name: product.name,
       image: product.image,
       description: product.description,
       totalPrice: product.totalPrice,

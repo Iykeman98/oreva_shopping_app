@@ -21,13 +21,7 @@ class CustomFlatButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: (){
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => CheckOut(zoomController: zoomController ?? ZoomDrawerController(),)
-          ),);
-      },
+      onTap: onTap,
       child: Center(
         child: Container(color: color == null ? Kcolor.primaryColor : color,
           height: 50,

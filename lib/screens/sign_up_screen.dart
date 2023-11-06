@@ -1,20 +1,17 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:orevahardware/constants/kcolors.dart';
 import 'package:orevahardware/global/common/toast.dart';
 import 'package:orevahardware/screens/dash_board.dart';
-import 'package:orevahardware/screens/sign_in_screen.dart';
 import 'package:orevahardware/user_auth/firebase_auth_service.dart';
 
 import '../widgets/dismissKeyboardOnTap.dart';
 import '../widgets/formfield.dart';
 
 class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({Key? key,  this.zoomController, this.toggleView})
+  const SignUpScreen({Key? key,   this.toggleView})
       : super(key: key);
 
-  final ZoomDrawerController? zoomController;
   final Function? toggleView;
 
   @override
@@ -36,6 +33,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   String password = "";
   String error = "";
   bool _creating = false;
+  bool _isCreatingError = false;
 
   @override
   void dispose() {
@@ -191,6 +189,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             CustomSignInAndUpButton(
                               onTap: _signUp,
                               isSigning: _creating,
+                              error: true,
                             )
                           ],
                         ),
@@ -225,9 +224,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
       successShowToast(message: 'user sign up is success');
       Navigator.push(context,
           MaterialPageRoute(
-              builder: (context) => DashBoard(
-                zoomController: widget.zoomController, instagramUrl: '',)));
+              builder: (context) => DashBoard()));
     }else{
+      setState(() {
+        _isCreatingError = true;
+      });
     failedShowToast(message: 'Some error');
     }
   }

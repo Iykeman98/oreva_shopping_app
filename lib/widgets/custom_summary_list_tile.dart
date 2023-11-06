@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:orevahardware/models/cart_items.dart';
 
 import '../constants/kcolors.dart';
 import '../models/card_data.dart';
@@ -26,10 +27,29 @@ class _OrderSummaryListTileState extends State<OrderSummaryListTile> {
       child: Container(
         color: Colors.grey[200],
         child: ListTile(
-          leading: Image(image: AssetImage(widget.cart.image),),
-          title: Text(widget.cart.description),
+          leading: Stack(
+            children: [
+              Image(image: AssetImage(widget.cart.image ?? ''),),
+              Positioned(
+                top: 0,
+                right: 0,
+                child: Container(
+                  padding: EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    color: Colors.red,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Text(
+                    // quantity.toString(),
+                    // style: TextStyle(color: Colors.white),
+                    ""
+                  ),
+                ),
+              ),            ],
+          ),
+          title: Text(widget.cart.description?? "N/A"),
           subtitle: Text(widget.cart.price.toString(), style: AppTextStyles.descriptionTextStyle2,),
-          trailing: Text(widget.cart.totalPrice),
+          trailing: Text(widget.cart.totalPrice?? ""),
         ),
       ),
     );

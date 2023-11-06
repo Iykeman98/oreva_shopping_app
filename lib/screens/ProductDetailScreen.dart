@@ -116,7 +116,7 @@ class _ProductDetailState extends State<ProductDetail> {
         ),),
               onPressed: () {
                 Navigator.of(context).pop();
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>CartScreen(zoomController: widget.zoomController)));
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>CartScreen()));
               },
             ),
             TextButton(
@@ -177,7 +177,7 @@ class _ProductDetailState extends State<ProductDetail> {
                             context,
                             MaterialPageRoute(
                               builder: (context) =>
-                                  CartScreen(zoomController: widget.zoomController),
+                                  CartScreen(),
                             ),
                           );
                         },
@@ -264,6 +264,8 @@ class _ProductDetailState extends State<ProductDetail> {
                               ],
                             ),
                             // SizedBox(height: 10,),
+                            Text(widget.selectedProduct!.name!, style:AppTextStyles.descriptionTextStyle3 ,),
+
                             Text(
                               widget.selectedProduct!.description!,
                               style: AppTextStyles.headerTextStyle,
@@ -295,9 +297,7 @@ class _ProductDetailState extends State<ProductDetail> {
                                 ),
                               ],
                             ),
-                            SizedBox(
-                              height: 10,
-                            ),
+
                             Row(
                               children: [
                                 Text('\₦',style: AppTextStyles.descriptionTextStyle3,),

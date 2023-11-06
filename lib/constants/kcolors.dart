@@ -45,12 +45,22 @@ class AppTextStyles {
     letterSpacing: 1,
     fontWeight: FontWeight.w500,
     fontSize: 13,
-  ); static const TextStyle descriptionTextStyle2 = TextStyle(
+  );
+
+  static const TextStyle descriptionTextStyle2 = TextStyle(
     color: Kcolor.primaryColor,
     letterSpacing: 1,
     fontWeight: FontWeight.w500,
     fontSize: 13,
-  );static const TextStyle descriptionTextStyle3 = TextStyle(
+  );
+
+  static const TextStyle descriptionTextStyle4 = TextStyle(
+    color: Kcolor.primaryColor,
+    letterSpacing: 1,
+    fontWeight: FontWeight.w500,
+    fontSize: 10,
+  );
+  static const TextStyle descriptionTextStyle3 = TextStyle(
 color:Colors.green,
     letterSpacing: 1,
     fontWeight: FontWeight.w500,
@@ -60,13 +70,13 @@ color:Colors.green,
     color: Kcolor.secondaryTextColor,
     letterSpacing: 1,
     fontWeight: FontWeight.w400,
-    fontSize: 15,
+    fontSize: 12,
   );
   static const TextStyle formFieldTextStyle = TextStyle(
     color: Colors.black,
     letterSpacing: 1,
     fontWeight: FontWeight.w500,
-    fontSize: 18,
+    fontSize: 14,
   );
 
   static const TextStyle addToTextStyle = TextStyle(

@@ -1,4 +1,5 @@
 import 'package:expandable/expandable.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_zoom_drawer/src/drawer_controller.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -45,6 +46,7 @@ class _CheckOutState extends State<CheckOut> {
     _controller.expanded = true;
   }
 
+  bool isUserAuthenticated = FirebaseAuth.instance.currentUser != null;
 
       @override
   Widget build(BuildContext context) {
@@ -111,10 +113,12 @@ class _CheckOutState extends State<CheckOut> {
                                 child: ListView.builder(
                                     shrinkWrap: true,
                                     physics: NeverScrollableScrollPhysics(),
-                                    // itemCount: myCarts.length,
-                                    itemCount: 2,
+                                    itemCount: myCarts.length,
                                     itemBuilder: (BuildContext context, int index){
-                                      return OrderSummaryListTile(cart: myCarts[index]);
+
+                                      final myCartss = myCarts[index];
+
+                                      return OrderSummaryListTile(cart: myCartss);
                                     }),
                               ),
                               SizedBox(height: 10),
@@ -315,7 +319,9 @@ class _CheckOutState extends State<CheckOut> {
                                         physics: NeverScrollableScrollPhysics(),
                                         itemCount: myCarts.length,
                                         itemBuilder: (BuildContext context, int index){
-                                          return OrderSummaryListTile(cart: myCarts[index]);
+                                          final myCartss = myCarts[index];
+
+                                          return OrderSummaryListTile(cart: myCartss);
                                         }),
                                   ),
                                   expanded: Text(''),
@@ -391,7 +397,15 @@ class _CheckOutState extends State<CheckOut> {
                                 ],
                               ),
                               SizedBox(height: 20),
-                              CustomFlatButton(text: "Pay now", width: MediaQuery.of(context).size.height * 1),
+                              CustomFlatButton(text: "Pay now",
+                                  width: MediaQuery.of(context).size.height * 1,
+                                  onTap: (){
+                                if(isUserAuthenticated){
+                                  print('user is checked in');
+                                }else{
+                                  print('please log  in');
+                                }
+                              }),
                               SizedBox(height: 20),
 
                             ],

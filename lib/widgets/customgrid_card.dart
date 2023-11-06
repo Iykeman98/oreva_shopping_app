@@ -39,7 +39,8 @@ class _CustomProductDisplayCardState extends State<CustomProductDisplayCard> {
             crossAxisAlignment: CrossAxisAlignment.start,
           children: [
           Image(image: AssetImage(widget.card.image!)),
-          SizedBox(height: 20,),
+          SizedBox(height: 10,),
+          Text(widget.card.name!, style:AppTextStyles.descriptionTextStyle3 ,),
           Text(widget.card.description!, style: AppTextStyles.descriptionTextStyle,maxLines: 2,),
             SizedBox(height: 10,),
             Row(
@@ -113,7 +114,7 @@ class _CustomCartProductDisplayState extends State<CustomCartProductDisplay> {
     return  Container(
       color: Colors.grey[200],
       padding: EdgeInsets.all(10),
-      height: 180,
+      height: 150,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -144,9 +145,14 @@ class _CustomCartProductDisplayState extends State<CustomCartProductDisplay> {
           SizedBox(width: 10,),
           Expanded(
             flex: 2,
-            child: Column(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            child: Column(mainAxisAlignment: MainAxisAlignment.spaceBetween, crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(child: Container(child: Text(widget.cart.description ?? "",style: AppTextStyles.secondaryTextStyle,),width: 150,)),
+                // Text(widget.cart.name ?? "N/A",style: AppTextStyles.descriptionTextStyle3,),
+                Text(widget.cart.name ?? "N/A",style: AppTextStyles.descriptionTextStyle3,),
+                Expanded(child: Container(child: Text(widget.cart.description ?? "N/A",style: AppTextStyles.descriptionTextStyle4,),width: 150,)),
+                // Expanded(child: Container(child: width: 150,)),
+                // Text(widget.selectedProduct!.name!, style:AppTextStyles.descriptionTextStyle3 ,),
+
                 Container(
                   margin: EdgeInsets.all(5),
                   decoration: BoxDecoration(
@@ -194,7 +200,7 @@ class _CustomCartProductDisplayState extends State<CustomCartProductDisplay> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                'Total: \$${totalAmount.toStringAsFixed(2)}', style: TextStyle(fontSize: 12),),
+                'Total: \₦${totalAmount.toStringAsFixed(2)}', style: TextStyle(fontSize: 12),),
                 IconButton(onPressed: (){
                   cartProvider.removeFromCart(widget.cart);
                   print("Delete button pressed for item: ${widget.cart.description}");

@@ -1,21 +1,19 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:orevahardware/constants/kcolors.dart';
 import 'package:orevahardware/global/common/toast.dart';
 import 'package:orevahardware/screens/dash_board.dart';
 import 'package:orevahardware/widgets/dismissKeyboardOnTap.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../user_auth/firebase_auth_service.dart';
 import '../widgets/formfield.dart';
 
 class SignInScreen extends StatefulWidget {
-  final ZoomDrawerController? zoomController; // Define zoomController as a property.
   final Function? toggleView;
 
-  const SignInScreen({Key? key,  this.zoomController, this.toggleView})
-      : super(key: key);
+  const SignInScreen({   this.toggleView});
 
   @override
   State<SignInScreen> createState() => _SignInScreenState();
@@ -23,9 +21,6 @@ class SignInScreen extends StatefulWidget {
 
 class _SignInScreenState extends State<SignInScreen> {
   final Firebase_Auth_Service _auth = Firebase_Auth_Service();
-  final zoomController = ZoomDrawerController();
-
-
 
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
@@ -43,6 +38,7 @@ class _SignInScreenState extends State<SignInScreen> {
   String error = "";
   bool _isFirstIcon = true;
   bool _isSigning = false;
+  bool _isSigningError = false;
 
 
   void _toggleIcon() {
@@ -55,15 +51,8 @@ class _SignInScreenState extends State<SignInScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: Icon(
-            Icons.arrow_back,
-            color: Kcolor.secondaryColor,
-          ),
-        ),
+        title: Text("OrevaHardware", style: AppTextStyles.appBarTextStyle),
+            centerTitle: true,
       ),
       body: DismissKeyboardOnTap(
         child: SafeArea(
@@ -79,7 +68,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         child: Column(
                           children: [
                             Text(
-                              'Create account',
+                              'Sign In',
                               style: AppTextStyles.headerTextStyle,
                             ),
                             SizedBox(
@@ -91,6 +80,7 @@ class _SignInScreenState extends State<SignInScreen> {
                               validator: (val)=> val!.isEmpty ? "Enter an email" : null,
                               onChanged: (val) {
                                 setState(() =>  email = val!);
+                                return null;
                               },
                               onTap: () {},
 
@@ -101,6 +91,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             ),
                             SizedBox(height: 15),
                             CustomFormField(
+                              isPasswordField: true,
                               validator: (val) => val!.length < 8
                                   ? "Enter a password ranging 8 character"
                                   : null,
@@ -108,6 +99,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                 setState(() {
                                   password = val!;
                                 });
+                                return null;
                               },
                               controller: _passwordController,
                               onTap: () {},
@@ -125,7 +117,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             SizedBox(height: 25),
                             CustomSignInAndUpButton(
                               isSigning: _isSigning,
-                              onTap: _signIn,
+                              onTap: _signIn, error: true,
                             ),
 
                             SizedBox(
@@ -176,8 +168,8 @@ setState(() {
   _isSigning = true;
 });
 
-    String email = _emailController.text;
-    String password = _passwordController.text;
+    String email = _emailController.text.trim();
+    String password = _passwordController.text.trim();
 
     User? user = await _auth.signInWithEmailAndPassword(email, password);
 
@@ -188,10 +180,16 @@ setState(() {
       successShowToast(message: 'user sign in is successful');
       Navigator.pushReplacement(context,
           MaterialPageRoute(
-              builder: (context) => DashBoard(
-                zoomController: widget.zoomController, instagramUrl: '',)));
+              builder: (context) => DashBoard()));
     }else{
+      setState(() {
+        _isSigningError = true;
+      });
       failedShowToast(message: 'Some error');
     }
+  }
+  void updateUserLoggedInStatus(bool isLoggedIn) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isLoggedIn', isLoggedIn);
   }
 }

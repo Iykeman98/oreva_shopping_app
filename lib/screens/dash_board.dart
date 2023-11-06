@@ -17,9 +17,9 @@ import 'information_screen.dart';
 
 class DashBoard extends StatefulWidget {
   final ZoomDrawerController? zoomController;
-  final String instagramUrl;
+  final String? instagramUrl;
 
-  const DashBoard({Key? key, required this.instagramUrl,  this.zoomController}) : super(key: key);
+  const DashBoard({Key? key,  this.instagramUrl,  this.zoomController}) : super(key: key);
 
   @override
   State<DashBoard> createState() => _DashBoardState();
@@ -96,7 +96,7 @@ class _DashBoardState extends State<DashBoard> {
 
 
   void launchInstagram() async {
-    final instagramUri = Uri.parse(widget.instagramUrl);
+    final instagramUri = Uri.parse(widget.instagramUrl!);
 
     if (await canLaunchUrl(instagramUri)) {
       await launchUrl(instagramUri.toString() as Uri);
@@ -164,16 +164,52 @@ class _DashBoardState extends State<DashBoard> {
                         color: Kcolor.secondaryColor, size: 25),
                     onPressed: startSearch,
                   ),
-                  IconButton(
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    CartScreen(),),);
-                      },
-                      icon: Icon(Icons.shopping_bag_sharp,
-                          color: Kcolor.secondaryColor, size: 25)),
+                  Consumer<CartProvider>(
+                    builder: (context, cartProvider, child) {
+                      int cartItemCount = cartProvider.cartItems.length;
+                      return Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      CartScreen(zoomController: widget.zoomController),
+                                ),
+                              );
+                            },
+                            icon: Icon(Icons.shopping_bag_sharp,
+                                color: Kcolor.secondaryColor, size: 25),
+                          ),
+                          if (cartItemCount > 0)
+                            Positioned(
+                              right: 0,
+                              child: Container(
+                                padding: EdgeInsets.all(5),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.red,
+                                ),
+                                constraints: BoxConstraints(
+                                  minWidth: 16,
+                                  minHeight: 16,
+                                ),
+                                child: Text(
+                                  cartItemCount.toString(),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ),
+                        ],
+                      );
+                    },
+                  ),
                 ],
               ),
             ),
@@ -241,12 +277,6 @@ class _DashBoardState extends State<DashBoard> {
                               card: cartProvider.myCartItems[index]
                           );
                         }),
-                  ),
-                  Divider(
-                    color: Kcolor.secondaryColor,
-                  ),
-                  Divider(
-                    color: Kcolor.secondaryColor,
                   ),
                 ],
               ),
@@ -350,13 +380,13 @@ class MyDrawer extends StatelessWidget {
                 IconButton(
                   icon: Icon(Icons.supervised_user_circle_rounded),
                   onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=> SignInScreen(zoomController: zoomController)));
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=> SignInScreen()));
                   },
                 ),
                 GestureDetector(
                   onTap: (){
                     FirebaseAuth.instance.signOut();
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=> SignInScreen(zoomController: zoomController)));
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=> SignInScreen()));
                     successShowToast(message: "Successfully signed out");
                   },
                   child: Text(
